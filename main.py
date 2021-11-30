@@ -12,6 +12,7 @@ import config
 from flask import *
 
 app = Flask(__name__)
+
 line_bot_api = LineBotApi(config.ACCESS_TOKEN)
 handler = WebhookHandler(config.CHANNEL_SECRET)
 
