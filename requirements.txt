@@ -11,7 +11,6 @@ itsdangerous==1.1.0
 Jinja2==2.11.3
 line-bot-sdk==1.19.0
 MarkupSafe==1.1.1
-mysql==0.0.2
 mysqlclient==2.0.3
 numpy==1.20.3
 paho-mqtt==1.5.1
