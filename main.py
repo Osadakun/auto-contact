@@ -30,7 +30,7 @@ def callback():
         abort(400)
 
 @handler.add(FollowEvent)
-def handle_follow(event):
+def handle_follow(event):           # 友達追加時に発火
 	"""
 	友だち追加したときのイベント。
 	UsersDBにID、アクティビティを追加。
@@ -55,7 +55,7 @@ def handle_follow(event):
 	)
 
 @handler.add(UnfollowEvent)
-def handle_unfollow(event):
+def handle_unfollow(event):         # 友達削除時に発火
 	"""
 	ブロックされた時のイベント。
 	UsersDBのIDとアクティビティを削除。
