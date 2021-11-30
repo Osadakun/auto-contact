@@ -8,3 +8,7 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 import function
+import config
+import psycopg2
+from flask import *
+import json
