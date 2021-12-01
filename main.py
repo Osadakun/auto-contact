@@ -17,7 +17,7 @@ app = Flask(__name__)
 
 line_bot_api = LineBotApi(config.ACCESS_TOKEN)
 handler = WebhookHandler(config.CHANNEL_SECRET)
-today = datetime.date.today()
+today = datetime.datetime.now()
 print("----------")
 print(today)
 print("----------")
