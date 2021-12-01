@@ -1,3 +1,5 @@
+import psycopg2
+
 def SQL_add(URL,id):
     con = psycopg2.connect(URL, sslmode='require')
     cursor = con.cursor()
