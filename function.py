@@ -24,6 +24,6 @@ def CheckStatus(URL,id):        # 状態チェック
     print("--------")
     print(id)
     print("--------")
-    print(status)
+    print(res)
     print("--------")
     return res[0] if res != None else None
