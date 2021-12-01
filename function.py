@@ -20,4 +20,7 @@ def CheckStatus(URL,id):
     cursor = con.cursor()
     status = cursor.execute("SELECT status FROM Informations where userid = %s;" %(id))
     con.commit()
+    print("--------")
+    print(id)
+    print("--------")
     return(status)
