@@ -46,7 +46,8 @@ def handle_follow(event):           # 友達追加時に発火
 
 @handler.add(UnfollowEvent)
 def handle_unfollow(event):         # 友達削除時に発火
-	UserID = event.source.user_id
+    UserID = event.source.user_id
+    function.SQL_delete(config.DB_URL,UserID)
 
 # if __name__ == "__main__":
 #     app.run(host="0.0.0.0", port=5000)
