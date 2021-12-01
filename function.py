@@ -1,6 +1,7 @@
 import psycopg2
 
 def SQL_add(URL,id):
+    id = str(id)
     con = psycopg2.connect(URL, sslmode='require')
     cursor = con.cursor()
     cursor.execute("INSERT INTO Informations(userid,status,reason_time,name,remarks) values (%s,'なし','なし','なし','なし');" %(id))
