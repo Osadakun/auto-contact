@@ -19,10 +19,7 @@ line_bot_api = LineBotApi(config.ACCESS_TOKEN)
 handler = WebhookHandler(config.CHANNEL_SECRET)
 
 JST = timezone(timedelta(hours=+9), 'JST')
-today = datetime.now(JST)
-print("----------")
-print(today)
-print("----------")
+today = datetime.now(JST)           # そのままだと9時間の時差があるため修正する
 
 days = {"Sun":"日","Mon":"月","Tue":"火","Wed":"水","Thu":"木","Fri":"金","Sat":"土"}
 
@@ -41,8 +38,8 @@ def callback():
     except InvalidSignatureError:
         abort(400)
 
-@handler.add(FollowEvent)
-def handle_follow(event):           # 友達追加時に発火
+@handler.add(FollowEvent)           # 友達追加時に発火
+def handle_follow(event):
     UserID = event.source.user_id
     line_bot_api.reply_message(event.reply_token,
 		[
@@ -63,7 +60,7 @@ def handle_message(event):          # メッセージが送信されてきたら
     UserID = event.source.user_id
     text = event.message.text
     status = function.CheckStatus(config.DB_URL,UserID)
-    if (status == "連絡待ち"):
+    if (status == "連絡待ち"):       # なんの連絡かを待っている
         if (text =="休み")or(text =="休")or(text =="やすみ"):
             function.ChangeContent(config.DB_URL,UserID,text)
             tmp = "休み"
@@ -88,7 +85,7 @@ def handle_message(event):          # メッセージが送信されてきたら
 					TextSendMessage(text='申し訳ありませんその言葉は理解しかねます。\n「休み」もしくは「遅刻」と送信して下さい。')
 				]
 			)
-    elif (status == "休み"):
+    elif (status == "休み"):            # 休みの場合
         function.ChangeReason(config.DB_URL,UserID,text)
         tmp = "名前"
         function.ChangeStatus(config.DB_URL,UserID,tmp)
@@ -97,7 +94,7 @@ def handle_message(event):          # メッセージが送信されてきたら
 				TextSendMessage(text='了解しました。\nお子さんの名前をフルネームで送信して下さい。')
 			]
 		)
-    elif (status == "遅刻"):
+    elif (status == "遅刻"):            # 遅刻の場合
         function.ChangeReason(config.DB_URL,UserID,text)
         tmp = "名前"
         function.ChangeStatus(config.DB_URL,UserID,tmp)
@@ -106,7 +103,7 @@ def handle_message(event):          # メッセージが送信されてきたら
 				TextSendMessage(text='了解しました。\nお子さんの名前をフルネームで送信して下さい。')
 			]
 		)
-    elif (status == "名前"):
+    elif (status == "名前"):            # 名前を聞く
         function.ChangeName(config.DB_URL,UserID,text)
         tmp = "補足"
         function.ChangeStatus(config.DB_URL,UserID,tmp)
@@ -115,7 +112,7 @@ def handle_message(event):          # メッセージが送信されてきたら
 				TextSendMessage(text='その他補足事項等があれば入力し送信して下さい。\n特になければ「なし」で送信して下さい。')
 			]
 		)
-    elif (status == "補足"):
+    elif (status == "補足"):            # 補足事項があれば記入してもらう
         function.ChangeRemarks(config.DB_URL,UserID,text)
         tmp = "最終確認"
         function.ChangeStatus(config.DB_URL,UserID,tmp)
@@ -127,6 +124,35 @@ def handle_message(event):          # メッセージが送信されてきたら
 				TextSendMessage(text="上記で登録します。よろしければ「はい」を、訂正がある場合は「いいえ」を送信して下さい。")
 			]
 		)
+    elif (status == "補足"):
+        if (text == "はい"):            # 登録内容に間違いがなければ監督へ送信
+            tmp = "連絡待ち"
+            function.ChangeStatus(config.DB_URL,UserID,tmp)
+            line_bot_api.reply_message(event.reply_token,
+				[
+					TextSendMessage(text='連絡を受け付けました。ありがとうございました。'),
+					TextSendMessage(text='本日の練習をお休みする場合は「休み」、遅れて参加の場合は「遅刻」と送信して下さい。')
+				]
+			)
+        elif (text == "いいえ"):        # 登録内容に間違いがあれば．．．ごめんなさい始めからです．
+            tmp = "連絡待ち"
+            function.ChangeStatus(config.DB_URL,UserID,tmp)
+            line_bot_api.reply_message(event.reply_token,
+				[
+					TextSendMessage(text = 'お手数ですが初めからやり直して下さい。'),
+					TextSendMessage(text='本日の練習をお休みする場合は「休み」、遅れて参加の場合は「遅刻」と送信して下さい。')
+				]
+			)
+        else:
+            res = function.CheckInfo(config.DB_URL,UserID)
+            we = days[today.strftime("%a")]
+            line_bot_api.reply_message(event.reply_token,
+			    [
+				    TextSendMessage(text="%d/%d(%s)\n%s\n%s:%s\n%s" %(today.month,today.day,we,res[4],res[2],res[3],res[5])),
+				    TextSendMessage(text="上記で登録します。よろしければ「はい」を、訂正がある場合は「いいえ」を送信して下さい。")
+			    ]
+		    )
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
