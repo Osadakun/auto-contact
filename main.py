@@ -17,8 +17,6 @@ app = Flask(__name__)
 line_bot_api = LineBotApi(config.ACCESS_TOKEN)
 handler = WebhookHandler(config.CHANNEL_SECRET)
 
-UserID = event.source.user_id
-
 def hello_world():
     return "HelloWorld!"
 
@@ -36,6 +34,7 @@ def callback():
 
 @handler.add(FollowEvent)
 def handle_follow(event):           # 友達追加時に発火
+    UserID = event.source.user_id
     line_bot_api.reply_message(event.reply_token,
 		[
 			TextSendMessage(text='minatoJBSC【公式】です。\n友達追加ありがとうございます!!'),
@@ -47,10 +46,12 @@ def handle_follow(event):           # 友達追加時に発火
 
 @handler.add(UnfollowEvent)
 def handle_unfollow(event):         # 友達削除時に発火
+    UserID = event.source.user_id
     function.SQL_delete(config.DB_URL,UserID)
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):          # メッセージが送信されてきたら発火，statusによって送信内容を変化させる
+    UserID = event.source.user_id
     text = event.message.text
     status = function.CheckStatus(config.DB_URL,UserID)
     print(status)
