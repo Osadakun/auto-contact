@@ -12,12 +12,13 @@ import config
 import os
 from flask import Flask, render_template, g, request, abort
 import datetime
+import pytz
 
 app = Flask(__name__)
 
 line_bot_api = LineBotApi(config.ACCESS_TOKEN)
 handler = WebhookHandler(config.CHANNEL_SECRET)
-today = datetime.datetime.now()
+today = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
 print("----------")
 print(today)
 print("----------")
