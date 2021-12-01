@@ -14,15 +14,16 @@ def SQL_delete(URL,id):         # 友達削除時にデータベースから削�
     cursor.execute("DELETE FROM Informations WHERE userid = %s;" %(id))
     con.commit()
 
-def CheckStatus(URL,id):
+def CheckStatus(URL,id):        # 状態チェック
     id = "'"+id+"'"
     con = psycopg2.connect(URL, sslmode='require')
     cursor = con.cursor()
-    status = cursor.execute("SELECT status FROM Informations where userid = %s;" %(id))
+    cursor.execute("SELECT status FROM Informations where userid = %s;" %(id))
+    res = cursor.fetchone()
     con.commit()
     print("--------")
     print(id)
     print("--------")
     print(status)
     print("--------")
-    return(status)
+    return res[0] if res != None else None
