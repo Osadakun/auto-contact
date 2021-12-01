@@ -24,7 +24,8 @@ def CheckStatus(URL,id):        # 状態チェック
     return res[0] if res != None else None
 
 def ChangeContent(URL,id,text):
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    id = "'"+id+"'"
+    conn = psycopg2.connect(URL, sslmode='require')
     cursor = conn.cursor()
     cursor.execute('UPDATE Infromations set content = %s where id = %s' %(text,id))
     conn.commit()
