@@ -11,11 +11,13 @@ import function
 import config
 import os
 from flask import Flask, render_template, g, request, abort
+import datetime
 
 app = Flask(__name__)
 
 line_bot_api = LineBotApi(config.ACCESS_TOKEN)
 handler = WebhookHandler(config.CHANNEL_SECRET)
+today = str(datetime.date.today())
 
 def hello_world():
     return "HelloWorld!"
@@ -106,13 +108,17 @@ def handle_message(event):          # メッセージが送信されてきたら
 				TextSendMessage(text='その他補足事項等があれば入力し送信して下さい。\n特になければ「なし」で送信して下さい。')
 			]
 		)
-    elif activity == "補足":
+    elif (status == "補足"):
         function.ChangeRemarks(config.DB_URL,UserID,text)
         tmp = "最終確認"
         function.ChangeStatus(config.DB_URL,UserID,tmp)
+        res = function.CheckInfo(config.DB_URL,UserID)
+        print("--------")
+        print(res)
+        print("--------")
         line_bot_api.reply_message(event.reply_token,
 			[
-				TextSendMessage(text=""),
+				TextSendMessage(text="%s¥n%s¥n%s:%s¥n%s" %(today,res[4],res[2],res[3],res[5])),
 				TextSendMessage(text="上記で登録します。よろしければ「はい」を、訂正がある場合は「いいえ」を送信して下さい。")
 			]
 		)

@@ -68,4 +68,6 @@ def CheckInfo(URL,id):
     conn = psycopg2.connect(URL, sslmode='require')
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM Informations WHERE userid = %s;' %(id))
-    conn.commit()
+    res = cursor.fetchone()
+    con.commit()
+    return res if res != None else None
