@@ -18,6 +18,9 @@ app = Flask(__name__)
 line_bot_api = LineBotApi(config.ACCESS_TOKEN)
 handler = WebhookHandler(config.CHANNEL_SECRET)
 today = datetime.date.today()
+print("----------")
+print(today)
+print("----------")
 
 days = {"Sun":"日","Mon":"月","Tue":"火","Wed":"水","Thu":"木","Fri":"金","Sat":"土"}
 
