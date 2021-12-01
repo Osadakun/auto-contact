@@ -124,7 +124,7 @@ def handle_message(event):          # メッセージが送信されてきたら
 				TextSendMessage(text="上記で登録します。よろしければ「はい」を、訂正がある場合は「いいえ」を送信して下さい。")
 			]
 		)
-    elif (status == "補足"):
+    elif (status == "最終確認"):
         if (text == "はい"):            # 登録内容に間違いがなければ監督へ送信
             tmp = "連絡待ち"
             function.ChangeStatus(config.DB_URL,UserID,tmp)
