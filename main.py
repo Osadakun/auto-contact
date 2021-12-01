@@ -9,6 +9,7 @@ from linebot.exceptions import (
 )
 import function
 import config
+import os
 from flask import Flask, render_template, g, request, abort
 
 app = Flask(__name__)
