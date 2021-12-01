@@ -76,9 +76,11 @@ def handle_message(event):          # メッセージが送信されてきたら
             function.ChangeStatus(config.DB_URL,UserID,tmp)
             line_bot_api.reply_message(event.reply_token,
 				[
-					TextSendMessage(text='遅刻ですね。\nどれくらい遅れそうか送信して下さい。')
+					TextSendMessage(text='遅刻ですね。\nどれくらい遅れそうか送信して下さい。(例：10分くらいなど)')
 				]
 			)
+        elif (text == "大会連絡"):
+            function.ChangeContent(config.DB_URL,UserID,text)
         else:
             line_bot_api.reply_message(event.reply_token,
 				[
