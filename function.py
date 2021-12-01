@@ -21,9 +21,4 @@ def CheckStatus(URL,id):        # 状態チェック
     cursor.execute("SELECT status FROM Informations where userid = %s;" %(id))
     res = cursor.fetchone()
     con.commit()
-    print("--------")
-    print(id)
-    print("--------")
-    print(res)
-    print("--------")
     return res[0] if res != None else None

@@ -54,8 +54,7 @@ def handle_message(event):          # メッセージが送信されてきたら
     UserID = event.source.user_id
     text = event.message.text
     status = function.CheckStatus(config.DB_URL,UserID)
-    print(status)
-    print("--------")
+    print(type(status))
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
