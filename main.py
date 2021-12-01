@@ -118,7 +118,7 @@ def handle_message(event):          # メッセージが送信されてきたら
         print("--------")
         line_bot_api.reply_message(event.reply_token,
 			[
-				TextSendMessage(text="%s¥n%s¥n%s:%s¥n%s" %(today,res[4],res[2],res[3],res[5])),
+				TextSendMessage(text="%s\n%s\n%s:%s\n%s" %(today,res[4],res[2],res[3],res[5])),
 				TextSendMessage(text="上記で登録します。よろしければ「はい」を、訂正がある場合は「いいえ」を送信して下さい。")
 			]
 		)
