@@ -54,10 +54,68 @@ def handle_message(event):          # メッセージが送信されてきたら
     UserID = event.source.user_id
     text = event.message.text
     status = function.CheckStatus(config.DB_URL,UserID)
-    if(status == "連絡待ち"):
-        if(text =="休み")or(text =="休")or(text =="やすみ"):
+    if (status == "連絡待ち"):
+        if (text =="休み")or(text =="休")or(text =="やすみ"):
             function.ChangeContent(config.DB_URL,UserID,text)
-
+            tmp = "休み"
+            function.ChangeStatus(config.DB_URL,UserID,tmp)
+            line_bot_api.reply_message(event.reply_token,
+				[
+					TextSendMessage(text='お休みですね。\n理由を選択して送信して下さい。\n「家庭都合」、「体調不良」、「怪我」、「その他」')
+				]
+            )
+        elif (text =="遅刻")or(text =="遅")or(text =="ちこく"):
+            function.ChangeContent(config.DB_URL,UserID,text)
+            tmp = "遅刻"
+            function.ChangeStatus(config.DB_URL,UserID,tmp)
+            line_bot_api.reply_message(event.reply_token,
+				[
+					TextSendMessage(text='遅刻ですね。\nどれくらい遅れそうか送信して下さい。')
+				]
+			)
+        else:
+            line_bot_api.reply_message(event.reply_token,
+				[
+					TextSendMessage(text='申し訳ありませんその言葉は理解しかねます。\n「休み」もしくは「遅刻」と送信して下さい。')
+				]
+			)
+    elif (status == "休み"):
+        function.ChangeReason(DB_URL,Userid,text)
+        tmp = "名前"
+        function.ChangeStatus(config.DB_URL,UserID,tmp)
+        line_bot_api.reply_message(event.reply_token,
+		    [
+				TextSendMessage(text='了解しました。\nお子さんの名前をフルネームで送信して下さい。')
+			]
+		)
+    elif (status == "遅刻"):
+        function.ChangeReason(DB_URL,Userid,text)
+        tmp = "名前"
+        function.ChangeStatus(config.DB_URL,UserID,tmp)
+        line_bot_api.reply_message(event.reply_token,
+		    [
+				TextSendMessage(text='了解しました。\nお子さんの名前をフルネームで送信して下さい。')
+			]
+		)
+    elif (status == "名前"):
+        function.ChangeName(DB_URL,Userid,text)
+        tmp = "補足"
+        function.ChangeStatus(config.DB_URL,UserID,tmp)
+        line_bot_api.reply_message(event.reply_token,
+			[
+				TextSendMessage(text='その他補足事項等があれば入力し送信して下さい。\n特になければ「なし」で送信して下さい。')
+			]
+		)
+    elif activity == "補足":
+        function.ChangeRemarks(DB_URL,Userid,text)
+        tmp = "最終確認"
+        function.ChangeStatus(config.DB_URL,UserID,tmp)
+        line_bot_api.reply_message(event.reply_token,
+			[
+				TextSendMessage(text=""),
+				TextSendMessage(text="上記で登録します。よろしければ「はい」を、訂正がある場合は「いいえ」を送信して下さい。")
+			]
+		)
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
