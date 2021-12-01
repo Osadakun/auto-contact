@@ -27,5 +27,5 @@ def ChangeContent(URL,id,text):
     id = "'"+id+"'"
     conn = psycopg2.connect(URL, sslmode='require')
     cursor = conn.cursor()
-    cursor.execute('UPDATE Infromations set content = %s where id = %s' %(text,id))
+    cursor.execute('UPDATE Informations set content = %s where id = %s' %(text,id))
     conn.commit()
