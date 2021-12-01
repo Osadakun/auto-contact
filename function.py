@@ -4,7 +4,7 @@ def SQL_add(URL,id):            # 友達追加時にデータベースに登録
     id = "'"+id+"'"
     con = psycopg2.connect(URL, sslmode='require')
     cursor = con.cursor()
-    cursor.execute("INSERT INTO Informations(userid,status,reason_time,name,remarks) values (%s,'連絡待ち','なし','なし','なし');" %(id))
+    cursor.execute("INSERT INTO Informations(userid,status,content,reason_time,name,remarks) values (%s,'連絡待ち','なし','なし','なし','なし');" %(id))
     con.commit()
 
 def SQL_delete(URL,id):         # 友達削除時にデータベースから削除
@@ -22,3 +22,9 @@ def CheckStatus(URL,id):        # 状態チェック
     res = cursor.fetchone()
     con.commit()
     return res[0] if res != None else None
+
+def ChangeContent(URL,id,text):
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    cursor = conn.cursor()
+    cursor.execute('UPDATE Infromations set content = %s where id = %s' %(text,id))
+    conn.commit()

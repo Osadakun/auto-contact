@@ -55,9 +55,8 @@ def handle_message(event):          # メッセージが送信されてきたら
     text = event.message.text
     status = function.CheckStatus(config.DB_URL,UserID)
     if(status == "連絡待ち"):
-        print("正解です")
-    else:
-        print("失敗です")
+        if(text =="休み")or(text =="休")or(text =="やすみ"):
+            function.ChangeContent(config.DB_URL,UserID,text)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
