@@ -54,7 +54,10 @@ def handle_message(event):          # メッセージが送信されてきたら
     UserID = event.source.user_id
     text = event.message.text
     status = function.CheckStatus(config.DB_URL,UserID)
-    print(type(status))
+    if(status == "連絡待ち"):
+        print("正解です")
+    else:
+        print("失敗です")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
