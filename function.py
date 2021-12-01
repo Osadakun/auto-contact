@@ -18,6 +18,6 @@ def CheckStatus(URL,id):
     id = "'"+id+"'"
     con = psycopg2.connect(URL, sslmode='require')
     cursor = con.cursor()
-    status = cursor.execute("SELECT status FROM Informations where userid = %s" %(id))
+    status = cursor.execute("SELECT status FROM Informations where userid = %s;" %(id))
     con.commit()
     return(status)
