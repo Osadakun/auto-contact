@@ -23,4 +23,6 @@ def CheckStatus(URL,id):
     print("--------")
     print(id)
     print("--------")
+    print(status)
+    print("--------")
     return(status)
