@@ -39,7 +39,7 @@ def ChangeContent(URL,id,text): # 連絡内容の更新
     cursor.execute('UPDATE Informations set content = %s where userid = %s;' %(text,id))
     conn.commit()
 
-def ChangeReason(URL,id,text):  # 欠席理由or到着予定時間を記入
+def ChangeReason(URL,id,text):  # 欠席理由or到着予定時間の更新
     id = "'"+id+"'"
     text = "'"+text+"'"
     conn = psycopg2.connect(URL, sslmode='require')
@@ -47,7 +47,7 @@ def ChangeReason(URL,id,text):  # 欠席理由or到着予定時間を記入
     cursor.execute('UPDATE Informations set reason_time = %s where userid = %s;' %(text,id))
     conn.commit()
 
-def ChangeName(URL,id,text):
+def ChangeName(URL,id,text):    # 名前の更新
     id = "'"+id+"'"
     text = "'"+text+"'"
     conn = psycopg2.connect(URL, sslmode='require')
@@ -55,7 +55,7 @@ def ChangeName(URL,id,text):
     cursor.execute('UPDATE Informations set name = %s where userid = %s;' %(text,id))
     conn.commit()
 
-def ChangeRemarks(URL,id,text):
+def ChangeRemarks(URL,id,text): # 補足事項の更新
     id = "'"+id+"'"
     text = "'"+text+"'"
     conn = psycopg2.connect(URL, sslmode='require')
@@ -63,11 +63,11 @@ def ChangeRemarks(URL,id,text):
     cursor.execute('UPDATE Informations set remarks = %s where userid = %s;' %(text,id))
     conn.commit()
 
-def CheckInfo(URL,id):
+def CheckInfo(URL,id):          # 連絡内容の確認
     id = "'"+id+"'"
     conn = psycopg2.connect(URL, sslmode='require')
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM Informations WHERE userid = %s;' %(id))
     res = cursor.fetchone()
-    con.commit()
+    conn.commit()
     return res if res != None else None
