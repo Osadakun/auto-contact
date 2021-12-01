@@ -12,15 +12,14 @@ import config
 import os
 from flask import Flask, render_template, g, request, abort
 import datetime
-import locale
 
 app = Flask(__name__)
 
 line_bot_api = LineBotApi(config.ACCESS_TOKEN)
 handler = WebhookHandler(config.CHANNEL_SECRET)
 today = datetime.date.today()
-locale.setlocale(locale.LC_TIME, 'ja_JP.UTF-8')
-we = today.strftime("%a")
+
+days = {"Sun":"日","Mon":"月","Tue":"火","Wed":"水","Thu":"木","Fri":"金","Sat":"土"}
 
 def hello_world():
     return "HelloWorld!"
@@ -116,6 +115,7 @@ def handle_message(event):          # メッセージが送信されてきたら
         tmp = "最終確認"
         function.ChangeStatus(config.DB_URL,UserID,tmp)
         res = function.CheckInfo(config.DB_URL,UserID)
+        we = days[today.strftime("%a")]
         line_bot_api.reply_message(event.reply_token,
 			[
 				TextSendMessage(text="%d/%d(%s)\n%s\n%s:%s\n%s" %(today.month,today.day,we,res[4],res[2],res[3],res[5])),
