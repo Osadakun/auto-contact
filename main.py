@@ -12,7 +12,6 @@ import config
 import os
 from flask import Flask, render_template, g, request, abort
 from datetime import datetime, timedelta, timezone
-import pytz
 
 app = Flask(__name__)
 
