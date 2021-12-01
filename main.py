@@ -80,7 +80,7 @@ def handle_message(event):          # メッセージが送信されてきたら
 				]
 			)
     elif (status == "休み"):
-        function.ChangeReason(DB_URL,Userid,text)
+        function.ChangeReason(config.DB_URL,Userid,text)
         tmp = "名前"
         function.ChangeStatus(config.DB_URL,UserID,tmp)
         line_bot_api.reply_message(event.reply_token,
@@ -89,7 +89,7 @@ def handle_message(event):          # メッセージが送信されてきたら
 			]
 		)
     elif (status == "遅刻"):
-        function.ChangeReason(DB_URL,Userid,text)
+        function.ChangeReason(config.DB_URL,Userid,text)
         tmp = "名前"
         function.ChangeStatus(config.DB_URL,UserID,tmp)
         line_bot_api.reply_message(event.reply_token,
@@ -98,7 +98,7 @@ def handle_message(event):          # メッセージが送信されてきたら
 			]
 		)
     elif (status == "名前"):
-        function.ChangeName(DB_URL,Userid,text)
+        function.ChangeName(config.DB_URL,Userid,text)
         tmp = "補足"
         function.ChangeStatus(config.DB_URL,UserID,tmp)
         line_bot_api.reply_message(event.reply_token,
@@ -107,7 +107,7 @@ def handle_message(event):          # メッセージが送信されてきたら
 			]
 		)
     elif activity == "補足":
-        function.ChangeRemarks(DB_URL,Userid,text)
+        function.ChangeRemarks(config.DB_URL,Userid,text)
         tmp = "最終確認"
         function.ChangeStatus(config.DB_URL,UserID,tmp)
         line_bot_api.reply_message(event.reply_token,
