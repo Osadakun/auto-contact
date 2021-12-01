@@ -25,6 +25,7 @@ def CheckStatus(URL,id):        # 状態チェック
 
 def ChangeContent(URL,id,text):
     id = "'"+id+"'"
+    text = "'"+text+"'"
     conn = psycopg2.connect(URL, sslmode='require')
     cursor = conn.cursor()
     cursor.execute('UPDATE Informations set content = %s where userid = %s' %(text,id))
