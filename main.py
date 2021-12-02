@@ -74,11 +74,12 @@ def handle_message(event):          # メッセージが送信されてきたら
         messages = TextSendMessage(text="兄弟がいる場合は続けて送信してください\nお子さんの名前の登録が完了したら、「完了」のボタンを，間違えてしまった場合は「やり直し」を押してください。", quick_reply=QuickReply(items=items))
         line_bot_api.reply_message(event.reply_token, messages=messages)
         if (text == "完了"):
-            print("^^^^^^^^^^")
-            print((name_list))
+            name_list.pop()                     # 完了まで入ってしまっているから取り除く
+            function.ChangeName(config.DB_URL,UserID,name_list)
             tmp = "連絡待ち"
             function.ChangeStatus(config.DB_URL,UserID,tmp)
         elif (text == "やり直し"):
+            name_list = []
             print("----------")
         else:
             pass

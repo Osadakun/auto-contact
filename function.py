@@ -47,13 +47,14 @@ def ChangeReason(URL,id,text):  # 欠席理由or到着予定時間の更新
     cursor.execute('UPDATE Informations set reason_time = %s where userid = %s;' %(text,id))
     conn.commit()
 
-def ChangeName(URL,id,text):    # 名前の更新
+def ChangeName(URL,id,names):    # 名前の更新
     id = "'"+id+"'"
-    text = "'"+text+"'"
-    conn = psycopg2.connect(URL, sslmode='require')
-    cursor = conn.cursor()
-    cursor.execute('UPDATE Informations set name = %s where userid = %s;' %(text,id))
-    conn.commit()
+    for name in names:
+        name = "'"+name+"'"
+        conn = psycopg2.connect(URL, sslmode='require')
+        cursor = conn.cursor()
+        cursor.execute('UPDATE Informations set name = %s where userid = %s;' %(text,id))
+        conn.commit()
 
 def ChangeRemarks(URL,id,text): # 補足事項の更新
     id = "'"+id+"'"
