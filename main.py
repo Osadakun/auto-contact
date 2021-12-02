@@ -75,7 +75,7 @@ def handle_message(event):          # メッセージが送信されてきたら
         line_bot_api.reply_message(event.reply_token, messages=messages)
         if (text == "完了"):
             name_list.pop()                     # 完了まで入ってしまっているから取り除く
-            function.ChangeName(config.DB_URL,UserID,name_list)
+            function.SetName(config.DB_URL,UserID,name_list)
             tmp = "連絡待ち"
             function.ChangeStatus(config.DB_URL,UserID,tmp)
         elif (text == "やり直し"):
