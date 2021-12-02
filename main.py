@@ -22,12 +22,12 @@ JST = timezone(timedelta(hours=+9), 'JST')
 today = datetime.now(JST)           # そのままだと9時間の時差があるため修正する
 
 days = {"Sun":"日","Mon":"月","Tue":"火","Wed":"水","Thu":"木","Fri":"金","Sat":"土"}
-ack_list = ["完了"]
+ack_list = ["完了","やり直し"]
 contact_list = ["休み","遅刻","大会"]
 reason_list = ["体調不良","家庭都合","怪我","その他"]
 time_list = ["５〜１０分ほど","１０〜１５分ほど","１５〜２０分ほど","２０分以上"]
 name_list = []
-remarks_list = ["なし"]
+# remarks_list = ["なし"]
 conf_list = ["はい","いいえ"]
 
 def hello_world():
@@ -71,11 +71,15 @@ def handle_message(event):          # メッセージが送信されてきたら
     if (status == "登録中"):
         name_list.append(text)
         line_bot_api.reply_message(event.reply_token,
-		[
-			TextSendMessage(text="兄弟がいる場合は続けて送信してください"),
-			TextSendMessage(text="お子さんの名前の登録が完了したら、「完了」のボタンを押してください。")
-		]
-	)
+		    [
+			    TextSendMessage(text="兄弟がいる場合は続けて送信してください")
+			    # TextSendMessage(text="お子さんの名前の登録が完了したら、「完了」のボタンを，間違えてしまった場合は「やり直し」を押してください。")
+		    ]
+	    )
+        items = [QuickReplyButton(action=MessageAction(label="%s" %(ack), text="%s" %(ack))) for ack in ack_list]
+        messages = TextSendMessage(text="お子さんの名前の登録が完了したら、「完了」のボタンを，間違えてしまった場合は「やり直し」を押してください。", quick_reply=QuickReply(items=items))
+        line_bot_api.reply_message(event.reply_token, messages=messages)
+
     elif (status == "連絡待ち"):       # なんの連絡かを待っている
         if (text =="休み")or(text =="休")or(text =="やすみ"):
             function.ChangeContent(config.DB_URL,UserID,text)
