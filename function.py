@@ -22,7 +22,7 @@ def SetName(URL,id,names):    # 名前の登録
     print(names)
     conn = psycopg2.connect(URL, sslmode='require')
     cursor = conn.cursor()
-    # cursor.execute('UPDATE Informations set name = %s where userid = %s;' %(*names,id))
+    cursor.execute('UPDATE Informations set name = {} where userid = {};'.format(*names,id))
     conn.commit()
 
 def CheckStatus(URL,id):        # 状態チェック
