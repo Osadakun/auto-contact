@@ -22,6 +22,13 @@ JST = timezone(timedelta(hours=+9), 'JST')
 today = datetime.now(JST)           # そのままだと9時間の時差があるため修正する
 
 days = {"Sun":"日","Mon":"月","Tue":"火","Wed":"水","Thu":"木","Fri":"金","Sat":"土"}
+ack_list = ["完了"]
+contact_list = ["休み","遅刻","大会"]
+reason_list = ["体調不良","家庭都合","怪我","その他"]
+time_list = ["５〜１０分ほど","１０〜１５分ほど","１５〜２０分ほど","２０分以上"]
+name_list = []
+remarks_list = ["なし"]
+conf_list = ["はい","いいえ"]
 
 def hello_world():
     return "HelloWorld!"
@@ -42,23 +49,14 @@ def callback():
 
 @handler.add(FollowEvent)           # 友達追加時に発火
 def handle_follow(event):
-    # UserID = event.source.user_id
-    # line_bot_api.reply_message(event.reply_token,
-	# 	[
-	# 		TextSendMessage(text='minatoJBSC【公式】です。\n友達追加ありがとうございます!!'),
-	# 		TextSendMessage(text='これからは練習の休み、遅刻の連絡はこのアカウントからお願いします。'),
-	# 		TextSendMessage(text='本日の練習をお休みする場合は「休み」、遅れて参加の場合は「遅刻」と送信して下さい。')
-	# 	]
-	# )
-    # function.SQL_add(config.DB_URL,UserID)
-    language_list = ["Ruby", "Python", "PHP", "Java", "C"]
-
-    items = [QuickReplyButton(action=MessageAction(label=f"{language}", text=f"{language}が好き")) for language in language_list]
-
-    messages = TextSendMessage(text="どの言語が好きですか？",
-                               quick_reply=QuickReply(items=items))
-
-    line_bot_api.reply_message(event.reply_token, messages=messages)
+    UserID = event.source.user_id
+    line_bot_api.reply_message(event.reply_token,
+		[
+			TextSendMessage(text="minatoJBSC【公式】です。\n友達追加ありがとうございます!!"),
+			TextSendMessage(text="まず初めにお子さんの名前（１人）をフルネームで教えてください。")
+		]
+	)
+    function.SQL_add(config.DB_URL,UserID)
 
 @handler.add(UnfollowEvent)
 def handle_unfollow(event):         # 友達削除時に発火
@@ -70,7 +68,15 @@ def handle_message(event):          # メッセージが送信されてきたら
     UserID = event.source.user_id
     text = event.message.text
     status = function.CheckStatus(config.DB_URL,UserID)
-    if (status == "連絡待ち"):       # なんの連絡かを待っている
+    if (status == "登録中"):
+        name_list.append(text)
+        line_bot_api.reply_message(event.reply_token,
+		[
+			TextSendMessage(text="兄弟がいる場合は続けて送信してください"),
+			TextSendMessage(text="お子さんの名前の登録が完了したら、「完了」のボタンを押してください。")
+		]
+	)
+    elif (status == "連絡待ち"):       # なんの連絡かを待っている
         if (text =="休み")or(text =="休")or(text =="やすみ"):
             function.ChangeContent(config.DB_URL,UserID,text)
             tmp = "休み"
@@ -166,5 +172,5 @@ def handle_message(event):          # メッセージが送信されてきたら
 		    )
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 5000))            # Heroku側が空いたポートを探してくれる 固定ポートにするとアプリ落ちる
     app.run(host="0.0.0.0", port=port)

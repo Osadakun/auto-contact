@@ -4,7 +4,7 @@ def SQL_add(URL,id):            # 友達追加時にデータベースに登録
     id = "'"+id+"'"             # これがないとSQL文に引っかからない
     con = psycopg2.connect(URL, sslmode='require')
     cursor = con.cursor()
-    cursor.execute("INSERT INTO Informations(userid,status,content,reason_time,name,remarks) values (%s,'連絡待ち','なし','なし','なし','なし');" %(id))
+    cursor.execute("INSERT INTO Informations(userid,status,content,reason_time,name,remarks) values (%s,'登録中','なし','なし','なし','なし');" %(id))
     con.commit()
 
 def SQL_delete(URL,id):         # 友達削除時にデータベースから削除
