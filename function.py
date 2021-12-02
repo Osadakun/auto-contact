@@ -14,6 +14,15 @@ def SQL_delete(URL,id):         # 友達削除時にデータベースから削�
     cursor.execute("DELETE FROM Informations WHERE userid = %s;" %(id))
     con.commit()
 
+def SetName(URL,id,names):    # 名前の登録
+    id = "'"+id+"'"
+    for name in names:
+        name = "'"+name+"'"
+        conn = psycopg2.connect(URL, sslmode='require')
+        cursor = conn.cursor()
+        cursor.execute('UPDATE Informations set name = %s where userid = %s;' %(name,id))
+        conn.commit()
+
 def CheckStatus(URL,id):        # 状態チェック
     id = "'"+id+"'"
     con = psycopg2.connect(URL, sslmode='require')
@@ -46,15 +55,6 @@ def ChangeReason(URL,id,text):  # 欠席理由or到着予定時間の更新
     cursor = conn.cursor()
     cursor.execute('UPDATE Informations set reason_time = %s where userid = %s;' %(text,id))
     conn.commit()
-
-def ChangeName(URL,id,names):    # 名前の更新
-    id = "'"+id+"'"
-    for name in names:
-        name = "'"+name+"'"
-        conn = psycopg2.connect(URL, sslmode='require')
-        cursor = conn.cursor()
-        cursor.execute('UPDATE Informations set name = %s where userid = %s;' %(text,id))
-        conn.commit()
 
 def ChangeRemarks(URL,id,text): # 補足事項の更新
     id = "'"+id+"'"
