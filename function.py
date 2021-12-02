@@ -14,15 +14,17 @@ def SQL_delete(URL,id):         # 友達削除時にデータベースから削�
     cursor.execute("DELETE FROM Informations WHERE userid = %s;" %(id))
     con.commit()
 
-def SetName(URL,id,names):    # 名前の登録
+def SetName(URL,id,names):      # 名前の登録
     id = "'"+id+"'"
     for i,name in enumerate(names):
         name = "'"+name+"'"
         names[i] = name
-    print(names)
     conn = psycopg2.connect(URL, sslmode='require')
     cursor = conn.cursor()
-    cursor.execute('UPDATE Informations set name = {} where userid = {};'.format(*names,id))
+    if (len(names) == 1):       # 現状兄弟がいても2人までだから成り立つが，3人以上になったときは使えない
+        cursor.execute('UPDATE Informations set name = {} where userid = {};'.format(*names,id))
+    else:
+        cursor.execute('UPDATE Informations set name = {}{} where userid = {};'.format(*names,id))
     conn.commit()
 
 def CheckStatus(URL,id):        # 状態チェック
