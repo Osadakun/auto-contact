@@ -16,9 +16,9 @@ def SQL_delete(URL,id):         # 友達削除時にデータベースから削�
 
 def SetName(URL,id,names):      # 名前の登録
     id = "'"+id+"'"
-    for i,name in enumerate(names):
-        name = "'"+name+"'"
-        names[i] = name
+    # for i,name in enumerate(names):
+    #     name = '"'+name+'"'
+    #     names[i] = name
     conn = psycopg2.connect(URL, sslmode='require')
     cursor = conn.cursor()
     if (len(names) == 1):       # 現状兄弟がいても2人までだから成り立つが，3人以上になったときは使えない

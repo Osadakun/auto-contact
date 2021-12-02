@@ -83,7 +83,7 @@ def handle_message(event):          # メッセージが送信されてきたら
             print("----------")
         else:
             pass
-        
+
     elif (status == "連絡待ち"):       # なんの連絡かを待っている
         if (text =="休み")or(text =="休")or(text =="やすみ"):
             function.ChangeContent(config.DB_URL,UserID,text)
