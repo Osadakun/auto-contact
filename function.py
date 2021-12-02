@@ -16,12 +16,11 @@ def SQL_delete(URL,id):         # 友達削除時にデータベースから削�
 
 def SetName(URL,id,names):    # 名前の登録
     id = "'"+id+"'"
-    for name in names:
-        name = "'"+name+"'"
-        conn = psycopg2.connect(URL, sslmode='require')
-        cursor = conn.cursor()
-        cursor.execute('UPDATE Informations set name = %s where userid = %s;' %(name,id))
-        conn.commit()
+    names = "'"+names+"'"
+    conn = psycopg2.connect(URL, sslmode='require')
+    cursor = conn.cursor()
+    cursor.execute('UPDATE Informations set name = %s where userid = %s;' %(name,id))
+    conn.commit()
 
 def CheckStatus(URL,id):        # 状態チェック
     id = "'"+id+"'"
