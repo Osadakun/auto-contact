@@ -19,9 +19,10 @@ def SetName(URL,id,names):    # 名前の登録
     for i,name in enumerate(names):
         name = "'"+name+"'"
         names[i] = name
+    print(names)
     conn = psycopg2.connect(URL, sslmode='require')
     cursor = conn.cursor()
-    cursor.execute('UPDATE Informations set name = %s where userid = %s;' %(*names,id))
+    # cursor.execute('UPDATE Informations set name = %s where userid = %s;' %(*names,id))
     conn.commit()
 
 def CheckStatus(URL,id):        # 状態チェック
