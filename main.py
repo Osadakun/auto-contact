@@ -79,7 +79,7 @@ def handle_message(event):          # メッセージが送信されてきたら
             tmp = "連絡待ち"
             function.ChangeStatus(config.DB_URL,UserID,tmp)
         elif (text == "やり直し"):
-            name_list = []
+            name_list.clear()
             print("----------")
         else:
             pass
