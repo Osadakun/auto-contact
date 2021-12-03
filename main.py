@@ -81,11 +81,19 @@ def handle_message(event):          # メッセージが送信されてきたら
             function.ChangeStatus(config.DB_URL,UserID,tmp)
             line_bot_api.reply_message(event.reply_token,
 				[
-					TextSendMessage(text = '名前の登録が完了しました。ありがとうございます。'),
-					TextSendMessage(text='本日の練習をお休みする場合は「休み」、遅れて参加の場合は「遅刻」と送信して下さい。')
-				]
+					TextSendMessage(text = '名前の登録が完了しました。ありがとうございます。')				]
 			)
             name_list.clear()
+            res = function.GetName(config.DB_URL,UserID)
+            for i in range(2):                # Pythonはタプルの値を書き換えるのはエラーが出るため，リストに追加し直す
+                name_list.append((res[i]))
+            if ("None" in name_list):
+                name_list.remove("None")
+            if (len(name_list) == 2):
+                name_list.append("２人とも")
+            items = [QuickReplyButton(action=MessageAction(label="%s" %(names), text="%s" %(names))) for names in name_list]
+            messages = TextSendMessage(text="連絡したいお子さんの名前を選択してください。", quick_reply=QuickReply(items=items))
+            line_bot_api.reply_message(event.reply_token, messages=messages)
         elif (text == "やり直し"):
             name_list.clear()
             line_bot_api.reply_message(event.reply_token,
@@ -98,16 +106,7 @@ def handle_message(event):          # メッセージが送信されてきたら
             pass
 
     elif (status == "連絡待ち"):            # 誰に対する連絡なのかを尋ねる
-        res = function.GetName(config.DB_URL,UserID)
-        for i in range(2):                # Pythonはタプルの値を書き換えるのはエラーが出るため，リストに追加し直す
-            name_list.append((res[i]))
-        if (name_list in "None"):
-            name_list.remove("None")
-        if (len(name_list) == 2):
-            name_list.append("２人とも")
-        items = [QuickReplyButton(action=MessageAction(label="%s" %(names), text="%s" %(names))) for names in name_list]
-        messages = TextSendMessage(text="連絡したいお子さんの名前を選択してください。", quick_reply=QuickReply(items=items))
-        line_bot_api.reply_message(event.reply_token, messages=messages)
+        print()
     elif (status == "連絡内容"):            # なんの連絡かを待っている
         if (text =="休み")or(text =="休")or(text =="やすみ"):
             function.ChangeContent(config.DB_URL,UserID,text)
