@@ -46,7 +46,7 @@ def CheckStatus(URL,id):        # 状態チェック
     cursor.execute("SELECT status FROM Informations where userid = %s;" %(id))
     res = cursor.fetchone()
     con.commit()
-    return res[0] if res != None else None
+    return res if res != None else None
 
 def ChangeStatus(URL,id,tmp):   # 状態の更新
     id = "'"+id+"'"
