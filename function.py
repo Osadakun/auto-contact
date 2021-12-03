@@ -24,8 +24,8 @@ def SetName(URL,id,names):      # 名前の登録
     if (len(names) == 1):       # 現状兄弟がいても2人までだから成り立つが，3人以上になったときは使えない
         cursor.execute('UPDATE Informations set name = %s where userid = %s;' %(names[0],id))
     else:
-        cursor.execute('UPDATE Informations set name = %s where userid = %s;' %(name[0],id))
-        cursor.execute('UPDATE Informations set name2 = %s where userid = %s;' %(name[1],id))
+        cursor.execute('UPDATE Informations set name = %s where userid = %s;' %(names[0],id))
+        cursor.execute('UPDATE Informations set name2 = %s where userid = %s;' %(names[1],id))
     conn.commit()
 
 def CheckStatus(URL,id):        # 状態チェック
