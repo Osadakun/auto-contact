@@ -99,13 +99,15 @@ def handle_message(event):          # メッセージが送信されてきたら
 
     elif (status == "連絡待ち"):            # 誰に対する連絡なのかを尋ねる
         res = function.GetName(config.DB_URL,UserID)
+        for i in range(2):                # Pythonはタプルの値を書き換えるのはエラーが出るため，リストに追加し直す
+            name_list.append((res[i]))
         for i in range(2):
             if (res[i] == "None"):
-                res.remove(res[i])
+                name_list.remove(name_list[i])
                 break
-            res[i] = "'"+res[i]+"'"
-        if (len(res) == 2):
-            res.append("２人とも")
+            name_list[i] = "'"+name_list[i]+"'"
+        if (len(name_list) == 2):
+            name_list.append("２人とも")
         items = [QuickReplyButton(action=MessageAction(label="%s" %(names), text="%s" %(names))) for names in name_list]
         messages = TextSendMessage(text="連絡したいお子さんの名前を選択してください。", quick_reply=QuickReply(items=items))
         line_bot_api.reply_message(event.reply_token, messages=messages)
