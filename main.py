@@ -69,11 +69,12 @@ def handle_message(event):          # メッセージが送信されてきたら
     text = event.message.text
     status = function.CheckStatus(config.DB_URL,UserID)
     if (status == "登録中"):        # 子供の名前を登録する
-        name_list.append(text)
-        items = [QuickReplyButton(action=MessageAction(label="%s" %(ack), text="%s" %(ack))) for ack in ack_list]
-        messages = TextSendMessage(text="兄弟がいる場合は続けて送信してください\nお子さんの名前の登録が完了したら、「完了」のボタンを，間違えてしまった場合は「やり直し」を押してください。", quick_reply=QuickReply(items=items))
-        line_bot_api.reply_message(event.reply_token, messages=messages)
-        if (text == "完了"):
+        if(len(text) > 0) and (text != "完了") and (text != "やり直し"):
+            name_list.append(text)
+            items = [QuickReplyButton(action=MessageAction(label="%s" %(ack), text="%s" %(ack))) for ack in ack_list]
+            messages = TextSendMessage(text="兄弟がいる場合は続けて送信してください\nお子さんの名前の登録が完了したら、「完了」のボタンを，間違えてしまった場合は「やり直し」を押してください。", quick_reply=QuickReply(items=items))
+            line_bot_api.reply_message(event.reply_token, messages=messages)
+        elif (text == "完了"):
             name_list.pop()          # 完了まで入ってしまっているから取り除く
             function.SetName(config.DB_URL,UserID,name_list)
             tmp = "連絡待ち"
