@@ -27,6 +27,7 @@ contact_list = ["休み","遅刻","大会"]
 reason_list = ["体調不良","家庭都合","怪我","その他"]
 time_list = ["５〜１０分ほど","１０〜１５分ほど","１５〜２０分ほど","２０分以上"]
 name_list = []
+select_list = []
 remarks_list = ["なし"]
 conf_list = ["はい","いいえ"]
 
@@ -97,9 +98,18 @@ def handle_message(event):          # メッセージが送信されてきたら
             pass
 
     elif (status == "連絡待ち"):            # 誰に対する連絡なのかを尋ねる
-        print(function.GetName(config.DB_URL, UserID))
-        print("------------")
-    # elif (status == "連絡待ち"):       # なんの連絡かを待っている
+        res = function.GetName(config.DB_URL,UserID)
+        for i in range(2):
+            if (res[i] == "None"):
+                res.remove(res[i])
+                break
+            res[i] = "'"+res[i]+"'"
+        if (len(res) == 2):
+            res.append("２人とも")
+        items = [QuickReplyButton(action=MessageAction(label="%s" %(names), text="%s" %(names))) for names in name_list]
+        messages = TextSendMessage(text="連絡したいお子さんの名前を選択してください。", quick_reply=QuickReply(items=items))
+        line_bot_api.reply_message(event.reply_token, messages=messages)
+    elif (status == "連絡内容"):       # なんの連絡かを待っている
         if (text =="休み")or(text =="休")or(text =="やすみ"):
             function.ChangeContent(config.DB_URL,UserID,text)
             tmp = "休み"

@@ -28,19 +28,13 @@ def SetName(URL,id,names):      # 名前の登録
         cursor.execute('UPDATE Informations set name2 = %s where userid = %s;' %(names[1],id))
     conn.commit()
 
-def GetName(URL,id):        # 名前の取得
+def GetName(URL,id):            # 名前の取得
     id = "'"+id+"'"
     con = psycopg2.connect(URL, sslmode='require')
     cursor = con.cursor()
     cursor.execute("SELECT name,name2 FROM Informations where userid = %s;" %(id))
-    res = cursor.fetchone()
+    res = cursor.fetchone()     # タプル型で入ってきている．結果なしだとNoneになる（name2について）
     con.commit()
-    print(res)
-    print("------------")
-    print(res[0])
-    print("------------")
-    print(res[1])
-    print("------------")
     return res if res != None else None
 
 def CheckStatus(URL,id):        # 状態チェック
