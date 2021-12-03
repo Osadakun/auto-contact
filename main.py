@@ -21,13 +21,13 @@ handler = WebhookHandler(config.CHANNEL_SECRET)
 JST = timezone(timedelta(hours=+9), 'JST')
 today = datetime.now(JST)           # そのままだと9時間の時差があるため修正する
 
-days = {"Sun":"日","Mon":"月","Tue":"火","Wed":"水","Thu":"木","Fri":"金","Sat":"土"}
-ack_list = ["完了","やり直し"]
+days = {"Sun":"日","Mon":"月","Tue":"火","Wed":"水","Thu":"木","Fri":"金","Sat":"土"}       # 英語で曜日が渡されてくるため辞書を用いて日本語に変換する
+ack_list = ["完了","やり直し"]                                              # conf_listまではクイックリプライ機能のボタンを使用する際に用いられるパラメータ
 contact_list = ["休み","遅刻","大会"]
 reason_list = ["体調不良","家庭都合","怪我","その他"]
 time_list = ["５〜１０分ほど","１０〜１５分ほど","１５〜２０分ほど","２０分以上"]
 name_list = []
-# remarks_list = ["なし"]
+remarks_list = ["なし"]
 conf_list = ["はい","いいえ"]
 
 def hello_world():
@@ -79,12 +79,25 @@ def handle_message(event):          # メッセージが送信されてきたら
             function.SetName(config.DB_URL,UserID,name_list)
             tmp = "連絡待ち"
             function.ChangeStatus(config.DB_URL,UserID,tmp)
+            line_bot_api.reply_message(event.reply_token,
+				[
+					TextSendMessage(text = '名前の登録が完了しました。ありがとうございます。'),
+					TextSendMessage(text='本日の練習をお休みする場合は「休み」、遅れて参加の場合は「遅刻」と送信して下さい。')
+				]
+			)
+            name_list.clear()
         elif (text == "やり直し"):
             name_list.clear()
-            print("----------")
+            line_bot_api.reply_message(event.reply_token,
+		        [
+			        TextSendMessage(text="まず初めにお子さんの名前（１人）をフルネームで教えてください。")
+		        ]
+	        )
         else:
             pass
 
+    elif (status == "名前"):            # 誰に対する連絡なのかを尋ねる
+        print()
     elif (status == "連絡待ち"):       # なんの連絡かを待っている
         if (text =="休み")or(text =="休")or(text =="やすみ"):
             function.ChangeContent(config.DB_URL,UserID,text)
