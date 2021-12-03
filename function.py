@@ -21,12 +21,23 @@ def SetName(URL,id,names):      # 名前の登録
         names[i] = name
     conn = psycopg2.connect(URL, sslmode='require')
     cursor = conn.cursor()
-    if (len(names) == 1):       # 現状兄弟がいても2人までだから成り立つが，3人以上になったときは使えない
+    if (len(names) == 1):       # 現状兄弟がいても2人までだから成り立つが，3人以上になったときは使えないというカスさ
         cursor.execute('UPDATE Informations set name = %s where userid = %s;' %(names[0],id))
     else:
         cursor.execute('UPDATE Informations set name = %s where userid = %s;' %(names[0],id))
         cursor.execute('UPDATE Informations set name2 = %s where userid = %s;' %(names[1],id))
     conn.commit()
+
+def GetName(URL,id):        # 名前の取得
+    id = "'"+id+"'"
+    con = psycopg2.connect(URL, sslmode='require')
+    cursor = con.cursor()
+    cursor.execute("SELECT name,name2 FROM Informations where userid = %s;" %(id))
+    res = cursor.fetchone()
+    con.commit()
+    print(res)
+    print("------------")
+    return res[0] if res != None else None
 
 def CheckStatus(URL,id):        # 状態チェック
     id = "'"+id+"'"

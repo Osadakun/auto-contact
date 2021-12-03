@@ -75,7 +75,6 @@ def handle_message(event):          # メッセージが送信されてきたら
             messages = TextSendMessage(text="兄弟がいる場合は続けて送信してください\nお子さんの名前の登録が完了したら、「完了」のボタンを，間違えてしまった場合は「やり直し」を押してください。", quick_reply=QuickReply(items=items))
             line_bot_api.reply_message(event.reply_token, messages=messages)
         elif (text == "完了"):
-            name_list.pop()          # 完了まで入ってしまっているから取り除く
             function.SetName(config.DB_URL,UserID,name_list)
             tmp = "連絡待ち"
             function.ChangeStatus(config.DB_URL,UserID,tmp)
@@ -90,6 +89,7 @@ def handle_message(event):          # メッセージが送信されてきたら
             name_list.clear()
             line_bot_api.reply_message(event.reply_token,
 		        [
+                    TextSendMessage(text="名前の登録をやり直します。"),
 			        TextSendMessage(text="まず初めにお子さんの名前（１人）をフルネームで教えてください。")
 		        ]
 	        )
@@ -97,7 +97,8 @@ def handle_message(event):          # メッセージが送信されてきたら
             pass
 
     elif (status == "名前"):            # 誰に対する連絡なのかを尋ねる
-        print()
+        print(function.GetName(config.DB_URL, UserID))
+        print("------------")
     elif (status == "連絡待ち"):       # なんの連絡かを待っている
         if (text =="休み")or(text =="休")or(text =="やすみ"):
             function.ChangeContent(config.DB_URL,UserID,text)
