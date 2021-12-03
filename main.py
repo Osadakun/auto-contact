@@ -100,32 +100,32 @@ def handle_message(event):          # メッセージが送信されてきたら
         print(function.GetName(config.DB_URL, UserID))
         print("------------")
     # elif (status == "連絡待ち"):       # なんの連絡かを待っている
-    #     if (text =="休み")or(text =="休")or(text =="やすみ"):
-    #         function.ChangeContent(config.DB_URL,UserID,text)
-    #         tmp = "休み"
-    #         function.ChangeStatus(config.DB_URL,UserID,tmp)
-    #         line_bot_api.reply_message(event.reply_token,
-	# 			[
-	# 				TextSendMessage(text='お休みですね。\n理由を選択して送信して下さい。\n「家庭都合」、「体調不良」、「怪我」、「その他」')
-	# 			]
-    #         )
-    #     elif (text =="遅刻")or(text =="遅")or(text =="ちこく"):
-    #         function.ChangeContent(config.DB_URL,UserID,text)
-    #         tmp = "遅刻"
-    #         function.ChangeStatus(config.DB_URL,UserID,tmp)
-    #         line_bot_api.reply_message(event.reply_token,
-	# 			[
-	# 				TextSendMessage(text='遅刻ですね。\nどれくらい遅れそうか送信して下さい。(例：10分くらいなど)')
-	# 			]
-	# 		)
-    #     elif (text == "大会連絡"):
-    #         function.ChangeContent(config.DB_URL,UserID,text)
-    #     else:
-    #         line_bot_api.reply_message(event.reply_token,
-	# 			[
-	# 				TextSendMessage(text='申し訳ありませんその言葉は理解しかねます。\n「休み」もしくは「遅刻」と送信して下さい。')
-	# 			]
-	# 		)
+        if (text =="休み")or(text =="休")or(text =="やすみ"):
+            function.ChangeContent(config.DB_URL,UserID,text)
+            tmp = "休み"
+            function.ChangeStatus(config.DB_URL,UserID,tmp)
+            line_bot_api.reply_message(event.reply_token,
+				[
+					TextSendMessage(text='お休みですね。\n理由を選択して送信して下さい。\n「家庭都合」、「体調不良」、「怪我」、「その他」')
+				]
+            )
+        elif (text =="遅刻")or(text =="遅")or(text =="ちこく"):
+            function.ChangeContent(config.DB_URL,UserID,text)
+            tmp = "遅刻"
+            function.ChangeStatus(config.DB_URL,UserID,tmp)
+            line_bot_api.reply_message(event.reply_token,
+				[
+					TextSendMessage(text='遅刻ですね。\nどれくらい遅れそうか送信して下さい。(例：10分くらいなど)')
+				]
+			)
+        elif (text == "大会連絡"):
+            function.ChangeContent(config.DB_URL,UserID,text)
+        else:
+            line_bot_api.reply_message(event.reply_token,
+				[
+					TextSendMessage(text='申し訳ありませんその言葉は理解しかねます。\n「休み」もしくは「遅刻」と送信して下さい。')
+				]
+			)
     elif (status == "休み"):            # 休みの場合
         function.ChangeReason(config.DB_URL,UserID,text)
         tmp = "名前"
