@@ -17,14 +17,15 @@ def SQL_delete(URL,id):         # 友達削除時にデータベースから削�
 def SetName(URL,id,names):      # 名前の登録
     id = "'"+id+"'"
     for i,name in enumerate(names):
-        name = '"'+name+'"'     # SQLがシングルクォーテーションで囲んでいるからダブルクォテーションで囲んで逃れるというカスさ
+        name = "'"+name+"'"
         names[i] = name
     conn = psycopg2.connect(URL, sslmode='require')
     cursor = conn.cursor()
     if (len(names) == 1):       # 現状兄弟がいても2人までだから成り立つが，3人以上になったときは使えない
-        cursor.execute('UPDATE Informations set name = {} where userid = {};'.format(*names,id))
+        cursor.execute('UPDATE Informations set name = %s where userid = %s;' %(names[0],id))
     else:
-        cursor.execute('UPDATE Informations set name = {}{} where userid = {};'.format(*names,id))
+        cursor.execute('UPDATE Informations set name = %s where userid = %s;' %(name[0],id))
+        cursor.execute('UPDATE Informations set name2 = %s where userid = %s;' %(name[1],id))
     conn.commit()
 
 def CheckStatus(URL,id):        # 状態チェック
