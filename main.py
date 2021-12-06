@@ -22,7 +22,7 @@ JST = timezone(timedelta(hours=+9), 'JST')
 today = datetime.now(JST)           # そのままだと9時間の時差があるため修正する
 
 days = {"Sun":"日","Mon":"月","Tue":"火","Wed":"水","Thu":"木","Fri":"金","Sat":"土"}       # 英語で曜日が渡されてくるため辞書を用いて日本語に変換する
-ack_list = ["完了","やり直し"]                                              # conf_listまではクイックリプライ機能のボタンを使用する際に用いられるパラメータ
+ack_list = ["完了","やり直し"]                                              # 以下conf_listまではクイックリプライ機能のボタンを使用する際に用いられるパラメータ
 contact_list = ["休み","遅刻","大会"]
 reason_list = ["体調不良","家庭都合","怪我","その他"]
 time_list = ["５〜１０分ほど","１０〜１５分ほど","１５〜２０分ほど","２０分以上"]
@@ -81,7 +81,8 @@ def handle_message(event):          # メッセージが送信されてきたら
             function.ChangeStatus(config.DB_URL,UserID,tmp)
             line_bot_api.reply_message(event.reply_token,
 				[
-					TextSendMessage(text = '名前の登録が完了しました。ありがとうございます。')				]
+					TextSendMessage(text = '名前の登録が完了しました。ありがとうございます。')
+                ]
 			)
             name_list.clear()
             res = function.GetName(config.DB_URL,UserID)
