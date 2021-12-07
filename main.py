@@ -80,11 +80,6 @@ def handle_message(event):          # メッセージが送信されてきたら
             function.SetName(config.DB_URL,UserID,name_list)
             tmp = "連絡待ち"
             function.ChangeStatus(config.DB_URL,UserID,tmp)
-            line_bot_api.reply_message(event.reply_token,
-				[
-					TextSendMessage(text = '名前の登録が完了しました。ありがとうございます。')
-                ]
-			)
             name_list.clear()
             res = function.GetName(config.DB_URL,UserID)
             for i in range(2):                # Pythonはタプルの値を書き換えるのはエラーが出るため，リストに追加し直す
@@ -94,8 +89,12 @@ def handle_message(event):          # メッセージが送信されてきたら
             if (len(name_list) == 2):
                 name_list.append("２人とも")
             items = [QuickReplyButton(action=MessageAction(label="%s" %(name), text="%s" %(name))) for name in name_list]
-            messages = TextSendMessage(text="連絡したいお子さんの名前を選択してください。", quick_reply=QuickReply(items=items))
-            line_bot_api.reply_message(event.reply_token, messages=messages)
+            line_bot_api.reply_message(event.reply_token,
+				[
+					TextSendMessage(text = '名前の登録が完了しました。ありがとうございます。'),
+                    TextSendMessage(text="連絡したいお子さんの名前を選択してください。", quick_reply=QuickReply(items=items))
+                ]
+			)
         elif (text == "やり直し"):
             name_list.clear()
             line_bot_api.reply_message(event.reply_token,
