@@ -30,6 +30,7 @@ name_list = []
 select_list = []
 remarks_list = ["なし"]
 conf_list = ["はい","いいえ"]
+children = ""
 
 def hello_world():
     return "HelloWorld!"
@@ -92,7 +93,7 @@ def handle_message(event):          # メッセージが送信されてきたら
                 name_list.remove("None")
             if (len(name_list) == 2):
                 name_list.append("２人とも")
-            items = [QuickReplyButton(action=MessageAction(label="%s" %(names), text="%s" %(names))) for names in name_list]
+            items = [QuickReplyButton(action=MessageAction(label="%s" %(name), text="%s" %(name))) for name in name_list]
             messages = TextSendMessage(text="連絡したいお子さんの名前を選択してください。", quick_reply=QuickReply(items=items))
             line_bot_api.reply_message(event.reply_token, messages=messages)
         elif (text == "やり直し"):
@@ -103,11 +104,23 @@ def handle_message(event):          # メッセージが送信されてきたら
 			        TextSendMessage(text="まず初めにお子さんの名前（１人）をフルネームで教えてください。")
 		        ]
 	        )
-        else:
-            pass
 
     elif (status == "連絡待ち"):            # 誰に対する連絡なのかを尋ねる
-        print()
+        if (text == "２人とも"):
+            name_list.remove("２人とも")
+            for i in name_list:
+                children += i + " "
+        else:
+            children += text
+            tmp = "連絡待ち"
+            function.ChangeStatus(config.DB_URL,UserID,tmp)
+            items = [QuickReplyButton(action=MessageAction(label="%s" %(contact), text="%s" %(contact))) for contact in contact_list]
+            line_bot_api.reply_message(event.reply_token,
+				[
+                    TextSendMessage(text="連絡したい内容を以下から選択してください。", quick_reply=QuickReply(items=items))
+					# TextSendMessage(text="連絡したい内容を以下から選択してください。")
+				]
+			)
     elif (status == "連絡内容"):            # なんの連絡かを待っている
         if (text =="休み")or(text =="休")or(text =="やすみ"):
             function.ChangeContent(config.DB_URL,UserID,text)
