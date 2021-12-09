@@ -108,23 +108,29 @@ def handle_message(event):          # メッセージが送信されてきたら
         global children
         if (text == "２人とも"):
             name_list.remove("２人とも")
+            tmp = "連絡内容"
+            function.ChangeStatus(config.DB_URL,UserID,tmp)
             for i in name_list:
                 children += i + " "
-            print(children)
+            items = [QuickReplyButton(action=MessageAction(label="%s" %(contact), text="%s" %(contact))) for contact in contact_list]
+            line_bot_api.reply_message(event.reply_token,
+				[
+                    TextSendMessage(text="連絡したい内容を以下から選択してください。", quick_reply=QuickReply(items=items))
+				]
+			)
         else:
             children += text
-            print(children)
-            tmp = "連絡待ち"
+            tmp = "連絡内容"
             function.ChangeStatus(config.DB_URL,UserID,tmp)
             items = [QuickReplyButton(action=MessageAction(label="%s" %(contact), text="%s" %(contact))) for contact in contact_list]
             line_bot_api.reply_message(event.reply_token,
 				[
                     TextSendMessage(text="連絡したい内容を以下から選択してください。", quick_reply=QuickReply(items=items))
-					# TextSendMessage(text="連絡したい内容を以下から選択してください。")
 				]
 			)
+
     elif (status == "連絡内容"):            # なんの連絡かを待っている
-        if (text =="休み")or(text =="休")or(text =="やすみ"):
+        if (text =="休み"):
             function.ChangeContent(config.DB_URL,UserID,text)
             tmp = "休み"
             function.ChangeStatus(config.DB_URL,UserID,tmp)
@@ -133,7 +139,7 @@ def handle_message(event):          # メッセージが送信されてきたら
 					TextSendMessage(text='お休みですね。\n理由を選択して送信して下さい。\n「家庭都合」、「体調不良」、「怪我」、「その他」')
 				]
             )
-        elif (text =="遅刻")or(text =="遅")or(text =="ちこく"):
+        elif (text =="遅刻"):
             function.ChangeContent(config.DB_URL,UserID,text)
             tmp = "遅刻"
             function.ChangeStatus(config.DB_URL,UserID,tmp)
@@ -150,6 +156,7 @@ def handle_message(event):          # メッセージが送信されてきたら
 					TextSendMessage(text='申し訳ありませんその言葉は理解しかねます。\n「休み」もしくは「遅刻」と送信して下さい。')
 				]
 			)
+
     elif (status == "休み"):            # 休みの場合
         function.ChangeReason(config.DB_URL,UserID,text)
         tmp = "名前"
@@ -159,6 +166,7 @@ def handle_message(event):          # メッセージが送信されてきたら
 				TextSendMessage(text='了解しました。\nお子さんの名前をフルネームで送信して下さい。')
 			]
 		)
+
     elif (status == "遅刻"):            # 遅刻の場合
         function.ChangeReason(config.DB_URL,UserID,text)
         tmp = "名前"
@@ -168,6 +176,7 @@ def handle_message(event):          # メッセージが送信されてきたら
 				TextSendMessage(text='了解しました。\nお子さんの名前をフルネームで送信して下さい。')
 			]
 		)
+
     elif (status == "名前"):            # 名前を聞く
         function.ChangeName(config.DB_URL,UserID,text)
         tmp = "補足"
@@ -177,6 +186,7 @@ def handle_message(event):          # メッセージが送信されてきたら
 				TextSendMessage(text='その他補足事項等があれば入力し送信して下さい。\n特になければ「なし」で送信して下さい。')
 			]
 		)
+
     elif (status == "補足"):            # 補足事項があれば記入してもらう
         function.ChangeRemarks(config.DB_URL,UserID,text)
         tmp = "最終確認"
@@ -189,6 +199,7 @@ def handle_message(event):          # メッセージが送信されてきたら
 				TextSendMessage(text="上記で登録します。よろしければ「はい」を、訂正がある場合は「いいえ」を送信して下さい。")
 			]
 		)
+
     elif (status == "最終確認"):
         if (text == "はい"):            # 登録内容に間違いがなければ監督へ送信
             tmp = "連絡待ち"
@@ -213,7 +224,7 @@ def handle_message(event):          # メッセージが送信されてきたら
             we = days[today.strftime("%a")]
             line_bot_api.reply_message(event.reply_token,
 			    [
-				    TextSendMessage(text="%d/%d(%s)\n%s\n%s:%s\n%s" %(today.month,today.day,we,res[4],res[2],res[3],res[5])),
+				    TextSendMessage(text="%d/%d(%s)\n%s\n%s:%s\n%s" %(today.month,today.day,we,children,res[2],res[3],res[5])),
 				    TextSendMessage(text="上記で登録します。よろしければ「はい」を、訂正がある場合は「いいえ」を送信して下さい。")
 			    ]
 		    )
