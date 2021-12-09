@@ -78,23 +78,23 @@ def handle_message(event):          # メッセージが送信されてきたら
             line_bot_api.reply_message(event.reply_token, messages=messages)
         elif (text == "完了"):
             function.SetName(config.DB_URL,UserID,name_list)
-            tmp = "連絡待ち"
+            tmp = "人の指定"
             function.ChangeStatus(config.DB_URL,UserID,tmp)
             name_list.clear()
-            res = function.GetName(config.DB_URL,UserID)
-            for i in range(2):                # Pythonはタプルの値を書き換えるのはエラーが出るため，リストに追加し直す
-                name_list.append((res[i]))
-            if (None in name_list):
-                name_list.remove(None)
-            if (len(name_list) == 2):
-                name_list.append("２人とも")
-            items = [QuickReplyButton(action=MessageAction(label="%s" %(name), text="%s" %(name))) for name in name_list]
-            line_bot_api.reply_message(event.reply_token,
-				[
-					TextSendMessage(text = '名前の登録が完了しました。ありがとうございます。'),
-                    TextSendMessage(text="連絡したいお子さんの名前を選択してください。", quick_reply=QuickReply(items=items))
-                ]
-			)
+            # res = function.GetName(config.DB_URL,UserID)
+            # for i in range(2):                # Pythonはタプルの値を書き換えるのはエラーが出るため，リストに追加し直す
+            #     name_list.append((res[i]))
+            # if (None in name_list):
+            #     name_list.remove(None)
+            # if (len(name_list) == 2):
+            #     name_list.append("２人とも")
+            # items = [QuickReplyButton(action=MessageAction(label="%s" %(name), text="%s" %(name))) for name in name_list]
+            # line_bot_api.reply_message(event.reply_token,
+			# 	[
+			# 		TextSendMessage(text = '名前の登録が完了しました。ありがとうございます。'),
+            #         TextSendMessage(text="連絡したいお子さんの名前を選択してください。", quick_reply=QuickReply(items=items))
+            #     ]
+			# )
         elif (text == "やり直し"):
             name_list.clear()
             line_bot_api.reply_message(event.reply_token,
@@ -103,6 +103,21 @@ def handle_message(event):          # メッセージが送信されてきたら
 			        TextSendMessage(text="まず初めにお子さんの名前（１人）をフルネームで教えてください。")
 		        ]
 	        )
+
+    elif (status == "人の指定"):
+        res = function.GetName(config.DB_URL,UserID)
+        for i in range(2):                # Pythonはタプルの値を書き換えるのはエラーが出るため，リストに追加し直す
+            name_list.append((res[i]))
+        if (None in name_list):
+            name_list.remove(None)
+        if (len(name_list) == 2):
+            name_list.append("２人とも")
+        items = [QuickReplyButton(action=MessageAction(label="%s" %(name), text="%s" %(name))) for name in name_list]
+        line_bot_api.reply_message(event.reply_token,
+			[
+                TextSendMessage(text="連絡したいお子さんの名前を選択してください。", quick_reply=QuickReply(items=items))
+            ]
+		)
 
     elif (status == "連絡待ち"):            # 誰に対する連絡なのかを尋ねる
         global children
@@ -132,20 +147,22 @@ def handle_message(event):          # メッセージが送信されてきたら
     elif (status == "連絡内容"):            # なんの連絡かを待っている
         if (text =="休み"):
             function.ChangeContent(config.DB_URL,UserID,text)
-            tmp = "休み"
+            tmp = "名前"
             function.ChangeStatus(config.DB_URL,UserID,tmp)
+            items = [QuickReplyButton(action=MessageAction(label="%s" %(reason), text="%s" %(reason))) for reason in reason_list]
             line_bot_api.reply_message(event.reply_token,
 				[
-					TextSendMessage(text='お休みですね。\n理由を選択して送信して下さい。\n「家庭都合」、「体調不良」、「怪我」、「その他」')
+					TextSendMessage(text='お休みですね。\n理由を以下から選択して下さい。\n「家庭都合」、「体調不良」、「怪我」、「その他」')
 				]
             )
         elif (text =="遅刻"):
             function.ChangeContent(config.DB_URL,UserID,text)
-            tmp = "遅刻"
+            tmp = "名前"
             function.ChangeStatus(config.DB_URL,UserID,tmp)
+            items = [QuickReplyButton(action=MessageAction(label="%s" %(time), text="%s" %(time))) for time in time_list]
             line_bot_api.reply_message(event.reply_token,
 				[
-					TextSendMessage(text='遅刻ですね。\nどれくらい遅れそうか送信して下さい。(例：10分くらいなど)')
+					TextSendMessage(text='遅刻ですね。\nどれくらい遅れそうか以下から選択して下さい。')
 				]
 			)
         elif (text == "大会連絡"):
@@ -157,33 +174,34 @@ def handle_message(event):          # メッセージが送信されてきたら
 				]
 			)
 
-    elif (status == "休み"):            # 休みの場合
-        function.ChangeReason(config.DB_URL,UserID,text)
-        tmp = "名前"
-        function.ChangeStatus(config.DB_URL,UserID,tmp)
-        line_bot_api.reply_message(event.reply_token,
-		    [
-				TextSendMessage(text='了解しました。\nお子さんの名前をフルネームで送信して下さい。')
-			]
-		)
+    # elif (status == "休み"):            # 休みの場合
+    #     function.ChangeReason(config.DB_URL,UserID,text)
+    #     tmp = "名前"
+    #     function.ChangeStatus(config.DB_URL,UserID,tmp)
+    #     line_bot_api.reply_message(event.reply_token,
+	# 	    [
+	# 			TextSendMessage(text='了解しました。\nお子さんの名前をフルネームで送信して下さい。')
+	# 		]
+	# 	)
 
-    elif (status == "遅刻"):            # 遅刻の場合
-        function.ChangeReason(config.DB_URL,UserID,text)
-        tmp = "名前"
-        function.ChangeStatus(config.DB_URL,UserID,tmp)
-        line_bot_api.reply_message(event.reply_token,
-		    [
-				TextSendMessage(text='了解しました。\nお子さんの名前をフルネームで送信して下さい。')
-			]
-		)
+    # elif (status == "遅刻"):            # 遅刻の場合
+    #     function.ChangeReason(config.DB_URL,UserID,text)
+    #     tmp = "名前"
+    #     function.ChangeStatus(config.DB_URL,UserID,tmp)
+    #     line_bot_api.reply_message(event.reply_token,
+	# 	    [
+	# 			TextSendMessage(text='了解しました。\nお子さんの名前をフルネームで送信して下さい。')
+	# 		]
+	# 	)
 
     elif (status == "名前"):            # 名前を聞く
-        function.ChangeName(config.DB_URL,UserID,text)
+        # function.ChangeName(config.DB_URL,UserID,text)
         tmp = "補足"
         function.ChangeStatus(config.DB_URL,UserID,tmp)
+        items = [QuickReplyButton(action=MessageAction(label="%s" %(remarks), text="%s" %(remarks))) for remarks in remarks_list]
         line_bot_api.reply_message(event.reply_token,
 			[
-				TextSendMessage(text='その他補足事項等があれば入力し送信して下さい。\n特になければ「なし」で送信して下さい。')
+				TextSendMessage(text='その他補足事項等があれば入力し送信して下さい。\n特になければなしを選択して下さい。')
 			]
 		)
 
@@ -193,6 +211,7 @@ def handle_message(event):          # メッセージが送信されてきたら
         function.ChangeStatus(config.DB_URL,UserID,tmp)
         res = function.CheckInfo(config.DB_URL,UserID)
         we = days[today.strftime("%a")]
+        items = [QuickReplyButton(action=MessageAction(label="%s" %(conf), text="%s" %(conf))) for conf in conf_list]
         line_bot_api.reply_message(event.reply_token,
 			[
 				TextSendMessage(text="%d/%d(%s)\n%s\n%s:%s\n%s" %(today.month,today.day,we,res[4],res[2],res[3],res[5])),
@@ -207,7 +226,7 @@ def handle_message(event):          # メッセージが送信されてきたら
             line_bot_api.reply_message(event.reply_token,
 				[
 					TextSendMessage(text='連絡を受け付けました。ありがとうございました。'),
-					TextSendMessage(text='本日の練習をお休みする場合は「休み」、遅れて参加の場合は「遅刻」と送信して下さい。')
+                    TextSendMessage(text="連絡したいお子さんの名前を選択してください。", quick_reply=QuickReply(items=items))
 				]
 			)
         elif (text == "いいえ"):        # 登録内容に間違いがあれば．．．ごめんなさい始めからです．
@@ -216,7 +235,7 @@ def handle_message(event):          # メッセージが送信されてきたら
             line_bot_api.reply_message(event.reply_token,
 				[
 					TextSendMessage(text = 'お手数ですが初めからやり直して下さい。'),
-					TextSendMessage(text='本日の練習をお休みする場合は「休み」、遅れて参加の場合は「遅刻」と送信して下さい。')
+                    TextSendMessage(text="連絡したいお子さんの名前を選択してください。", quick_reply=QuickReply(items=items))
 				]
 			)
         else:
