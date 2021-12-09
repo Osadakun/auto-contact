@@ -105,11 +105,13 @@ def handle_message(event):          # メッセージが送信されてきたら
 	        )
 
     elif (status == "連絡待ち"):            # 誰に対する連絡なのかを尋ねる
+        global children
         if (text == "２人とも"):
             name_list.remove("２人とも")
             for i in name_list:
                 children += i + " "
         else:
+            global children
             children += text
             tmp = "連絡待ち"
             function.ChangeStatus(config.DB_URL,UserID,tmp)
