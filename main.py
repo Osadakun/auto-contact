@@ -110,8 +110,10 @@ def handle_message(event):          # メッセージが送信されてきたら
             name_list.remove("２人とも")
             for i in name_list:
                 children += i + " "
+            print(children)
         else:
             children += text
+            print(children)
             tmp = "連絡待ち"
             function.ChangeStatus(config.DB_URL,UserID,tmp)
             items = [QuickReplyButton(action=MessageAction(label="%s" %(contact), text="%s" %(contact))) for contact in contact_list]
