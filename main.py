@@ -160,16 +160,6 @@ def handle_message(event):          # メッセージが送信されてきたら
 				]
 			)
 
-    # elif (status == "遅刻"):            # 遅刻の場合
-    #     function.ChangeReason(config.DB_URL,UserID,text)
-    #     tmp = "名前"
-    #     function.ChangeStatus(config.DB_URL,UserID,tmp)
-    #     line_bot_api.reply_message(event.reply_token,
-	# 	    [
-	# 			TextSendMessage(text='了解しました。\nお子さんの名前をフルネームで送信して下さい。')
-	# 		]
-	# 	)
-
     elif (status == "名前"):            # 名前を聞く
         # function.ChangeName(config.DB_URL,UserID,text)
         tmp = "補足"
