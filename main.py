@@ -161,7 +161,6 @@ def handle_message(event):          # メッセージが送信されてきたら
 			)
 
     elif (status == "名前"):            # 名前を聞く
-        # function.ChangeName(config.DB_URL,UserID,text)
         tmp = "補足"
         function.ChangeStatus(config.DB_URL,UserID,tmp)
         items = [QuickReplyButton(action=MessageAction(label="%s" %(remarks), text="%s" %(remarks))) for remarks in remarks_list]
