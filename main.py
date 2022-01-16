@@ -19,7 +19,7 @@ line_bot_api = LineBotApi(config.ACCESS_TOKEN)
 handler = WebhookHandler(config.CHANNEL_SECRET)
 
 JST = timezone(timedelta(hours=+9), 'JST')
-today = datetime.now(JST)           # そのままだと9時間の時差があるため修正する
+today = datetime.now(JST)                                                   # そのままだと9時間の時差があるため修正する
 
 days = {"Sun":"日","Mon":"月","Tue":"火","Wed":"水","Thu":"木","Fri":"金","Sat":"土"}       # 英語で曜日が渡されてくるため辞書を用いて日本語に変換する
 ack_list = ["完了","やり直し"]                                              # 以下conf_listまではクイックリプライ機能のボタンを使用する際に用いられるパラメータ
